@@ -1,0 +1,19 @@
+[package]
+name = "tree-sitter-procman"
+version = "0.1.0"
+description = "Procman grammar for tree-sitter"
+license = "MIT"
+edition = "2021"
+keywords = ["tree-sitter", "parser", "procman"]
+categories = ["parsing", "text-editors"]
+build = "bindings/rust/build.rs"
+include = ["bindings/rust/*", "grammar.js", "queries/*", "src/*"]
+
+[lib]
+path = "bindings/rust/lib.rs"
+
+[dependencies]
+tree-sitter-language = "0.1"
+
+[build-dependencies]
+cc = "1"

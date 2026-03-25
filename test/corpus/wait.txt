@@ -1,0 +1,178 @@
+===
+Wait with after
+===
+
+job api {
+  wait {
+    after @migrate
+  }
+  run "api-server"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (wait_block
+      (wait_condition
+        (after_condition
+          (job_reference (identifier)))))
+    (run_statement
+      (string (string_content)))))
+
+===
+Wait with http condition
+===
+
+job api {
+  wait {
+    http "http://localhost:3000/health" {
+      status = 200
+      timeout = 30s
+      poll = 500ms
+    }
+  }
+  run "api-server"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (wait_block
+      (wait_condition
+        (http_condition
+          (string (string_content))
+          (condition_options
+            (setting
+              name: (identifier)
+              value: (number))
+            (setting
+              name: (identifier)
+              value: (duration))
+            (setting
+              name: (identifier)
+              value: (duration))))))
+    (run_statement
+      (string (string_content)))))
+
+===
+Wait with connect
+===
+
+job db {
+  wait {
+    connect "127.0.0.1:5432"
+  }
+  run "db-client start"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (wait_block
+      (wait_condition
+        (connect_condition
+          (string (string_content)))))
+    (run_statement
+      (string (string_content)))))
+
+===
+Negated conditions
+===
+
+job healthcheck {
+  wait {
+    !connect "127.0.0.1:8080"
+    !exists "/tmp/api.lock"
+    !running "old-api.*"
+  }
+  run "api-server --port 8080"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (wait_block
+      (wait_condition
+        (connect_condition
+          (string (string_content))))
+      (wait_condition
+        (exists_condition
+          (string (string_content))))
+      (wait_condition
+        (running_condition
+          (string (string_content)))))
+    (run_statement
+      (string (string_content)))))
+
+===
+Contains condition
+===
+
+job api {
+  wait {
+    contains "/tmp/config.yaml" {
+      format = "yaml"
+      key = "$.database.url"
+      var = database_url
+    }
+  }
+  run "api-server"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (wait_block
+      (wait_condition
+        (contains_condition
+          (string (string_content))
+          (setting
+            name: (identifier)
+            value: (string (string_content)))
+          (setting
+            name: (identifier)
+            value: (string (string_content)))
+          (setting
+            name: (identifier)
+            value: (identifier)))))
+    (run_statement
+      (string (string_content)))))
+
+===
+After with timeout option
+===
+
+job api {
+  wait {
+    after @migrate {
+      timeout = 30s
+    }
+  }
+  run "api-server"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (wait_block
+      (wait_condition
+        (after_condition
+          (job_reference (identifier))
+          (condition_options
+            (setting
+              name: (identifier)
+              value: (duration))))))
+    (run_statement
+      (string (string_content)))))

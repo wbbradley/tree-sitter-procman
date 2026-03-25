@@ -1,0 +1,11 @@
+prefix=@PREFIX@
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@
+
+Name: tree-sitter-procman
+Description: Procman grammar for tree-sitter
+URL: https://github.com/wbbradley/tree-sitter-procman
+Version: @VERSION@
+Requires: tree-sitter
+Libs: -L${libdir} -ltree-sitter-procman
+Cflags: -I${includedir}

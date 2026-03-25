@@ -1,0 +1,102 @@
+===
+Empty config block
+===
+
+config {
+}
+
+---
+
+(source_file
+  (config_block))
+
+===
+Config with logs
+===
+
+config {
+  logs = "./my-logs"
+}
+
+---
+
+(source_file
+  (config_block
+    (setting
+      name: (identifier)
+      value: (string (string_content)))))
+
+===
+Config with env block
+===
+
+config {
+  env {
+    RUST_LOG = args.log_level
+  }
+}
+
+---
+
+(source_file
+  (config_block
+    (env_block
+      (env_pair
+        name: (identifier)
+        value: (args_reference (identifier))))))
+
+===
+Config with arg definition
+===
+
+config {
+  arg port {
+    type = string
+    default = "3000"
+    short = "p"
+    description = "Port to listen on"
+  }
+}
+
+---
+
+(source_file
+  (config_block
+    (arg_definition
+      name: (identifier)
+      (setting
+        name: (identifier)
+        value: (identifier))
+      (setting
+        name: (identifier)
+        value: (string (string_content)))
+      (setting
+        name: (identifier)
+        value: (string (string_content)))
+      (setting
+        name: (identifier)
+        value: (string (string_content))))))
+
+===
+Config with bool arg
+===
+
+config {
+  arg enable_feature {
+    type = bool
+    default = false
+  }
+}
+
+---
+
+(source_file
+  (config_block
+    (arg_definition
+      name: (identifier)
+      (setting
+        name: (identifier)
+        value: (identifier))
+      (setting
+        name: (identifier)
+        value: (boolean)))))

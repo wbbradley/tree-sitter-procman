@@ -1,0 +1,92 @@
+===
+For with glob
+===
+
+job nodes {
+  once = true
+  for config_path in glob("/etc/nodes/*.yaml") {
+    env NODE_CONFIG = config_path
+    run "node-agent --config $NODE_CONFIG"
+  }
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (once_statement (boolean))
+    (for_statement
+      variable: (identifier)
+      iterable: (glob_pattern (string (string_content)))
+      (env_single
+        name: (identifier)
+        value: (identifier))
+      (run_statement
+        (string (string_content))))))
+
+===
+For with array
+===
+
+job services {
+  for name in ["api", "web", "worker"] {
+    run "start-service"
+  }
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (for_statement
+      variable: (identifier)
+      iterable: (array_literal
+        (string (string_content))
+        (string (string_content))
+        (string (string_content)))
+      (run_statement
+        (string (string_content))))))
+
+===
+For with exclusive range
+===
+
+job instances {
+  for i in 0..3 {
+    run "start-instance"
+  }
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (for_statement
+      variable: (identifier)
+      iterable: (range_exclusive (number) (number))
+      (run_statement
+        (string (string_content))))))
+
+===
+For with inclusive range
+===
+
+job instances {
+  for i in 0..=3 {
+    run "start-instance"
+  }
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (for_statement
+      variable: (identifier)
+      iterable: (range_inclusive (number) (number))
+      (run_statement
+        (string (string_content))))))

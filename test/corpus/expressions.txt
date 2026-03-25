@@ -1,0 +1,183 @@
+===
+Boolean expression with and
+===
+
+job worker if args.enable_worker && args.enable_api {
+  run "worker"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    condition: (binary_expression
+      (args_reference (identifier))
+      (args_reference (identifier)))
+    (run_statement
+      (string (string_content)))))
+
+===
+Comparison expression
+===
+
+job worker if args.mode == "production" {
+  run "worker"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    condition: (binary_expression
+      (args_reference (identifier))
+      (string (string_content)))
+    (run_statement
+      (string (string_content)))))
+
+===
+Unary not expression
+===
+
+job worker if !args.disable_worker {
+  run "worker"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    condition: (unary_expression
+      (args_reference (identifier)))
+    (run_statement
+      (string (string_content)))))
+
+===
+Or expression
+===
+
+job worker if args.dev || args.staging {
+  run "worker"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    condition: (binary_expression
+      (args_reference (identifier))
+      (args_reference (identifier)))
+    (run_statement
+      (string (string_content)))))
+
+===
+Duration literal in setting
+===
+
+job api {
+  wait {
+    connect "127.0.0.1:5432" {
+      timeout = 10s
+      retry = false
+    }
+  }
+  run "api-server"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (wait_block
+      (wait_condition
+        (connect_condition
+          (string (string_content))
+          (condition_options
+            (setting
+              name: (identifier)
+              value: (duration))
+            (setting
+              name: (identifier)
+              value: (boolean))))))
+    (run_statement
+      (string (string_content)))))
+
+===
+None literal
+===
+
+job api {
+  wait {
+    after @migrate {
+      timeout = none
+    }
+  }
+  run "api-server"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (wait_block
+      (wait_condition
+        (after_condition
+          (job_reference (identifier))
+          (condition_options
+            (setting
+              name: (identifier)
+              value: (none))))))
+    (run_statement
+      (string (string_content)))))
+
+===
+String with escape sequences
+===
+
+job web {
+  env MSG = "hello\nworld\t\"quoted\""
+  run "echo $MSG"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (env_single
+      name: (identifier)
+      value: (string
+        (string_content)
+        (escape_sequence)
+        (string_content)
+        (escape_sequence)
+        (escape_sequence)
+        (string_content)
+        (escape_sequence)))
+    (run_statement
+      (string (string_content)))))
+
+===
+Comment
+===
+
+# This is a comment
+job web {
+  # Another comment
+  run "server"
+}
+
+---
+
+(source_file
+  (comment)
+  (job_definition
+    name: (identifier)
+    (comment)
+    (run_statement
+      (string (string_content)))))

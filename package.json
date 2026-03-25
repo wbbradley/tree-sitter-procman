@@ -1,0 +1,37 @@
+{
+  "name": "tree-sitter-procman",
+  "version": "0.1.0",
+  "description": "Procman (.pman) grammar for tree-sitter",
+  "main": "bindings/node",
+  "types": "bindings/node",
+  "keywords": [
+    "tree-sitter",
+    "parser",
+    "procman",
+    "pman"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "node-addon-api": "^8.0.0",
+    "node-gyp-build": "^4.8.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.24.0",
+    "prebuildify": "^6.0.0"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.21.0"
+  },
+  "peerDependenciesMeta": {
+    "tree-sitter": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "build": "tree-sitter generate && node-gyp build",
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse",
+    "install": "node-gyp-build"
+  }
+}

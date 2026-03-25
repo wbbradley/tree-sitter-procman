@@ -1,0 +1,74 @@
+===
+Watch with http
+===
+
+job web {
+  run "web-server --port 8080"
+
+  watch health {
+    http "http://localhost:8080/health" {
+      status = 200
+    }
+    initial_delay = 5s
+    poll = 10s
+    threshold = 3
+    on_fail shutdown
+  }
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (run_statement
+      (string (string_content)))
+    (watch_block
+      name: (identifier)
+      (wait_condition
+        (http_condition
+          (string (string_content))
+          (condition_options
+            (setting
+              name: (identifier)
+              value: (number)))))
+      (setting
+        name: (identifier)
+        value: (duration))
+      (setting
+        name: (identifier)
+        value: (duration))
+      (setting
+        name: (identifier)
+        value: (number))
+      (on_fail_action
+        (identifier)))))
+
+===
+Watch with spawn
+===
+
+job web {
+  run "web-server"
+
+  watch disk {
+    exists "/var/run/healthy"
+    on_fail spawn @recovery
+  }
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (run_statement
+      (string (string_content)))
+    (watch_block
+      name: (identifier)
+      (wait_condition
+        (exists_condition
+          (string (string_content))))
+      (on_fail_action
+        (spawn_action
+          (job_reference (identifier)))))))

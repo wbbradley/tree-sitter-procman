@@ -1,0 +1,133 @@
+===
+Simple job
+===
+
+job web {
+  run "serve --port 8080"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (run_statement
+      (string (string_content)))))
+
+===
+Job with once
+===
+
+job migrate {
+  once = true
+  run "run-migrations"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (once_statement (boolean))
+    (run_statement
+      (string (string_content)))))
+
+===
+Conditional job
+===
+
+job worker if args.enable_worker {
+  run "worker-service start"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    condition: (args_reference (identifier))
+    (run_statement
+      (string (string_content)))))
+
+===
+Job with env single
+===
+
+job api {
+  env PORT = args.port
+  run "api-server start"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (env_single
+      name: (identifier)
+      value: (args_reference (identifier)))
+    (run_statement
+      (string (string_content)))))
+
+===
+Job with env block
+===
+
+job api {
+  env {
+    API_KEY = "secret"
+    LOG_DIR = args.log_dir
+  }
+  run "api-server start"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (env_block
+      (env_pair
+        name: (identifier)
+        value: (string (string_content)))
+      (env_pair
+        name: (identifier)
+        value: (args_reference (identifier))))
+    (run_statement
+      (string (string_content)))))
+
+===
+Job with job output reference
+===
+
+job api {
+  env DB_URL = @migrate.DATABASE_URL
+  run "api-server start"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (env_single
+      name: (identifier)
+      value: (job_output_reference (identifier) (identifier)))
+    (run_statement
+      (string (string_content)))))
+
+===
+Event definition
+===
+
+event recovery {
+  run "./scripts/recover.sh"
+}
+
+---
+
+(source_file
+  (event_definition
+    name: (identifier)
+    (run_statement
+      (string (string_content)))))

@@ -1,0 +1,219 @@
+===
+Full example from spec
+===
+
+config {
+  logs = "./my-logs"
+
+  env {
+    RUST_LOG = args.log_level
+  }
+
+  arg port {
+    type = string
+    default = "3000"
+    short = "p"
+    description = "Port to listen on"
+  }
+
+  arg log_level {
+    type = string
+    default = "info"
+    short = "r"
+    description = "RUST_LOG configuration"
+  }
+
+  arg enable_worker {
+    type = bool
+    default = false
+  }
+}
+
+job migrate {
+  once = true
+  run ```
+    ./run-migrations
+    echo "DATABASE_URL=postgres://localhost:5432/mydb" > $PROCMAN_OUTPUT
+  ```
+}
+
+job web {
+  env PORT = args.port
+  run "serve --port $PORT"
+}
+
+job api {
+  env DB_URL = @migrate.DATABASE_URL
+
+  wait {
+    after @migrate
+    http "http://localhost:3000/health" {
+      status = 200
+      timeout = 30s
+      poll = 500ms
+    }
+  }
+
+  run "api-server start --db $DB_URL"
+}
+
+job db {
+  wait {
+    connect "127.0.0.1:5432"
+  }
+  run "db-client start"
+}
+
+job healthcheck {
+  wait {
+    !connect "127.0.0.1:8080"
+    !exists "/tmp/api.lock"
+    !running "old-api.*"
+  }
+  run "api-server --port 8080"
+}
+
+job worker if args.enable_worker {
+  run "worker-service start"
+}
+
+job nodes {
+  once = true
+  for config_path in glob("/etc/nodes/*.yaml") {
+    env NODE_CONFIG = config_path
+    run "node-agent --config $NODE_CONFIG"
+  }
+}
+
+job web-watched {
+  run "web-server --port 8080"
+
+  watch health {
+    http "http://localhost:8080/health" {
+      status = 200
+    }
+    initial_delay = 5s
+    poll = 10s
+    threshold = 3
+    on_fail shutdown
+  }
+
+  watch disk {
+    exists "/var/run/healthy"
+    on_fail spawn @recovery
+  }
+}
+
+event recovery {
+  run "./scripts/recover.sh"
+}
+
+---
+
+(source_file
+  (config_block
+    (setting
+      name: (identifier)
+      value: (string (string_content)))
+    (env_block
+      (env_pair
+        name: (identifier)
+        value: (args_reference (identifier))))
+    (arg_definition
+      name: (identifier)
+      (setting name: (identifier) value: (identifier))
+      (setting name: (identifier) value: (string (string_content)))
+      (setting name: (identifier) value: (string (string_content)))
+      (setting name: (identifier) value: (string (string_content))))
+    (arg_definition
+      name: (identifier)
+      (setting name: (identifier) value: (identifier))
+      (setting name: (identifier) value: (string (string_content)))
+      (setting name: (identifier) value: (string (string_content)))
+      (setting name: (identifier) value: (string (string_content))))
+    (arg_definition
+      name: (identifier)
+      (setting name: (identifier) value: (identifier))
+      (setting name: (identifier) value: (boolean))))
+  (job_definition
+    name: (identifier)
+    (once_statement (boolean))
+    (run_statement (fenced_string)))
+  (job_definition
+    name: (identifier)
+    (env_single
+      name: (identifier)
+      value: (args_reference (identifier)))
+    (run_statement (string (string_content))))
+  (job_definition
+    name: (identifier)
+    (env_single
+      name: (identifier)
+      value: (job_output_reference (identifier) (identifier)))
+    (wait_block
+      (wait_condition
+        (after_condition
+          (job_reference (identifier))))
+      (wait_condition
+        (http_condition
+          (string (string_content))
+          (condition_options
+            (setting name: (identifier) value: (number))
+            (setting name: (identifier) value: (duration))
+            (setting name: (identifier) value: (duration))))))
+    (run_statement (string (string_content))))
+  (job_definition
+    name: (identifier)
+    (wait_block
+      (wait_condition
+        (connect_condition
+          (string (string_content)))))
+    (run_statement (string (string_content))))
+  (job_definition
+    name: (identifier)
+    (wait_block
+      (wait_condition
+        (connect_condition (string (string_content))))
+      (wait_condition
+        (exists_condition (string (string_content))))
+      (wait_condition
+        (running_condition (string (string_content)))))
+    (run_statement (string (string_content))))
+  (job_definition
+    name: (identifier)
+    condition: (args_reference (identifier))
+    (run_statement (string (string_content))))
+  (job_definition
+    name: (identifier)
+    (once_statement (boolean))
+    (for_statement
+      variable: (identifier)
+      iterable: (glob_pattern (string (string_content)))
+      (env_single
+        name: (identifier)
+        value: (identifier))
+      (run_statement (string (string_content)))))
+  (job_definition
+    name: (identifier)
+    (run_statement (string (string_content)))
+    (watch_block
+      name: (identifier)
+      (wait_condition
+        (http_condition
+          (string (string_content))
+          (condition_options
+            (setting name: (identifier) value: (number)))))
+      (setting name: (identifier) value: (duration))
+      (setting name: (identifier) value: (duration))
+      (setting name: (identifier) value: (number))
+      (on_fail_action (identifier)))
+    (watch_block
+      name: (identifier)
+      (wait_condition
+        (exists_condition (string (string_content))))
+      (on_fail_action
+        (spawn_action
+          (job_reference (identifier))))))
+  (event_definition
+    name: (identifier)
+    (run_statement (string (string_content)))))
