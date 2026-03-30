@@ -3,7 +3,6 @@ For with glob
 ===
 
 job nodes {
-  once = true
   for config_path in glob("/etc/nodes/*.yaml") {
     env NODE_CONFIG = config_path
     run "node-agent --config $NODE_CONFIG"
@@ -15,7 +14,6 @@ job nodes {
 (source_file
   (job_definition
     name: (identifier)
-    (once_statement (boolean))
     (for_statement
       variable: (identifier)
       iterable: (glob_pattern (string (string_content)))

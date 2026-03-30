@@ -36,28 +36,28 @@ bool tree_sitter_procman_external_scanner_scan(void *payload, TSLexer *lexer,
     lexer->advance(lexer, true);
   }
 
-  /* Match opening ``` */
-  if (lexer->lookahead != '`') return false;
+  /* Match opening """ */
+  if (lexer->lookahead != '"') return false;
   lexer->advance(lexer, false);
-  if (lexer->lookahead != '`') return false;
+  if (lexer->lookahead != '"') return false;
   lexer->advance(lexer, false);
-  if (lexer->lookahead != '`') return false;
+  if (lexer->lookahead != '"') return false;
   lexer->advance(lexer, false);
 
-  /* Consume content until closing ``` */
-  unsigned backtick_count = 0;
+  /* Consume content until closing """ */
+  unsigned quote_count = 0;
   for (;;) {
     if (lexer->eof(lexer)) return false;
 
-    if (lexer->lookahead == '`') {
-      backtick_count++;
+    if (lexer->lookahead == '"') {
+      quote_count++;
       lexer->advance(lexer, false);
-      if (backtick_count == 3) {
+      if (quote_count == 3) {
         lexer->result_symbol = FENCED_STRING;
         return true;
       }
     } else {
-      backtick_count = 0;
+      quote_count = 0;
       lexer->advance(lexer, false);
     }
   }

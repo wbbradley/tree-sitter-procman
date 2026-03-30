@@ -3,6 +3,7 @@
 [
   "config"
   "job"
+  "service"
   "event"
 ] @keyword.type
 
@@ -20,7 +21,6 @@
   "run"
   "wait"
   "watch"
-  "once"
   "arg"
   "after"
   "http"
@@ -67,6 +67,9 @@
 ; ── Definitions ───────────────────────────────────────────────────────
 
 (job_definition
+  name: (identifier) @type.definition)
+
+(service_definition
   name: (identifier) @type.definition)
 
 (event_definition

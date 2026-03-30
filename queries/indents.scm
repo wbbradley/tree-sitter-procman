@@ -1,6 +1,7 @@
 [
   (config_block)
   (job_definition)
+  (service_definition)
   (event_definition)
   (arg_definition)
   (env_block)

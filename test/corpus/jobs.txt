@@ -15,24 +15,6 @@ job web {
       (string (string_content)))))
 
 ===
-Job with once
-===
-
-job migrate {
-  once = true
-  run "run-migrations"
-}
-
----
-
-(source_file
-  (job_definition
-    name: (identifier)
-    (once_statement (boolean))
-    (run_statement
-      (string (string_content)))))
-
-===
 Conditional job
 ===
 
@@ -115,6 +97,98 @@ job api {
       value: (job_output_reference (identifier) (identifier)))
     (run_statement
       (string (string_content)))))
+
+===
+Simple service
+===
+
+service web {
+  run "serve --port 8080"
+}
+
+---
+
+(source_file
+  (service_definition
+    name: (identifier)
+    (run_statement
+      (string (string_content)))))
+
+===
+Conditional service
+===
+
+service worker if args.enable_worker {
+  run "worker-service start"
+}
+
+---
+
+(source_file
+  (service_definition
+    name: (identifier)
+    condition: (args_reference (identifier))
+    (run_statement
+      (string (string_content)))))
+
+===
+Service with wait and watch
+===
+
+service api {
+  wait {
+    after @migrate
+  }
+  run "api-server"
+  watch health {
+    http "http://localhost:3000/health" {
+      status = 200
+    }
+    on_fail shutdown
+  }
+}
+
+---
+
+(source_file
+  (service_definition
+    name: (identifier)
+    (wait_block
+      (wait_condition
+        (after_condition
+          (job_reference (identifier)))))
+    (run_statement
+      (string (string_content)))
+    (watch_block
+      name: (identifier)
+      (wait_condition
+        (http_condition
+          (string (string_content))
+          (condition_options
+            (setting
+              name: (identifier)
+              value: (number)))))
+      (on_fail_action
+        (identifier)))))
+
+===
+Job with fenced string
+===
+
+job migrate {
+  run """
+    ./run-migrations
+    echo "done"
+  """
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (run_statement
+      (fenced_string))))
 
 ===
 Event definition

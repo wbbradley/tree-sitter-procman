@@ -16,6 +16,7 @@ module.exports = grammar({
     _top_level: $ => choice(
       $.config_block,
       $.job_definition,
+      $.service_definition,
       $.event_definition,
     ),
 
@@ -116,6 +117,15 @@ module.exports = grammar({
       "}",
     ),
 
+    service_definition: $ => seq(
+      "service",
+      field("name", $.identifier),
+      optional(seq("if", field("condition", $._expression))),
+      "{",
+      repeat($._job_item),
+      "}",
+    ),
+
     event_definition: $ => seq(
       "event",
       field("name", $.identifier),
@@ -125,7 +135,6 @@ module.exports = grammar({
     ),
 
     _job_item: $ => choice(
-      $.once_statement,
       $.env_single,
       $.env_block,
       $.wait_block,
@@ -133,8 +142,6 @@ module.exports = grammar({
       $.run_statement,
       $.for_statement,
     ),
-
-    once_statement: $ => seq("once", "=", $._expression),
 
     // ── Env ──────────────────────────────────────────────────────────
 

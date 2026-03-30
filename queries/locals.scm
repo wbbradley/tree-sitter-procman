@@ -1,5 +1,6 @@
 ; Scopes
 (job_definition) @local.scope
+(service_definition) @local.scope
 (event_definition) @local.scope
 (for_statement) @local.scope
 

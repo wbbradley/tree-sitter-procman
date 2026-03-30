@@ -4,6 +4,7 @@ Full example from spec
 
 config {
   logs = "./my-logs"
+  log_time = true
 
   env {
     RUST_LOG = args.log_level
@@ -30,19 +31,18 @@ config {
 }
 
 job migrate {
-  once = true
-  run ```
+  run """
     ./run-migrations
     echo "DATABASE_URL=postgres://localhost:5432/mydb" > $PROCMAN_OUTPUT
-  ```
+  """
 }
 
-job web {
+service web {
   env PORT = args.port
   run "serve --port $PORT"
 }
 
-job api {
+service api {
   env DB_URL = @migrate.DATABASE_URL
 
   wait {
@@ -57,14 +57,14 @@ job api {
   run "api-server start --db $DB_URL"
 }
 
-job db {
+service db {
   wait {
     connect "127.0.0.1:5432"
   }
   run "db-client start"
 }
 
-job healthcheck {
+service healthcheck {
   wait {
     !connect "127.0.0.1:8080"
     !exists "/tmp/api.lock"
@@ -73,19 +73,18 @@ job healthcheck {
   run "api-server --port 8080"
 }
 
-job worker if args.enable_worker {
+service worker if args.enable_worker {
   run "worker-service start"
 }
 
 job nodes {
-  once = true
   for config_path in glob("/etc/nodes/*.yaml") {
     env NODE_CONFIG = config_path
     run "node-agent --config $NODE_CONFIG"
   }
 }
 
-job web-watched {
+service web-watched {
   run "web-server --port 8080"
 
   watch health {
@@ -115,6 +114,9 @@ event recovery {
     (setting
       name: (identifier)
       value: (string (string_content)))
+    (setting
+      name: (identifier)
+      value: (boolean))
     (env_block
       (env_pair
         name: (identifier)
@@ -137,15 +139,14 @@ event recovery {
       (setting name: (identifier) value: (boolean))))
   (job_definition
     name: (identifier)
-    (once_statement (boolean))
     (run_statement (fenced_string)))
-  (job_definition
+  (service_definition
     name: (identifier)
     (env_single
       name: (identifier)
       value: (args_reference (identifier)))
     (run_statement (string (string_content))))
-  (job_definition
+  (service_definition
     name: (identifier)
     (env_single
       name: (identifier)
@@ -162,14 +163,14 @@ event recovery {
             (setting name: (identifier) value: (duration))
             (setting name: (identifier) value: (duration))))))
     (run_statement (string (string_content))))
-  (job_definition
+  (service_definition
     name: (identifier)
     (wait_block
       (wait_condition
         (connect_condition
           (string (string_content)))))
     (run_statement (string (string_content))))
-  (job_definition
+  (service_definition
     name: (identifier)
     (wait_block
       (wait_condition
@@ -179,13 +180,12 @@ event recovery {
       (wait_condition
         (running_condition (string (string_content)))))
     (run_statement (string (string_content))))
-  (job_definition
+  (service_definition
     name: (identifier)
     condition: (args_reference (identifier))
     (run_statement (string (string_content))))
   (job_definition
     name: (identifier)
-    (once_statement (boolean))
     (for_statement
       variable: (identifier)
       iterable: (glob_pattern (string (string_content)))
@@ -193,7 +193,7 @@ event recovery {
         name: (identifier)
         value: (identifier))
       (run_statement (string (string_content)))))
-  (job_definition
+  (service_definition
     name: (identifier)
     (run_statement (string (string_content)))
     (watch_block
