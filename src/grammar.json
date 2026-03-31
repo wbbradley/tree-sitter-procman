@@ -15,7 +15,23 @@
       "members": [
         {
           "type": "SYMBOL",
+          "name": "import_definition"
+        },
+        {
+          "type": "SYMBOL",
           "name": "config_block"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "arg_definition"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "env_single"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "env_block"
         },
         {
           "type": "SYMBOL",
@@ -159,6 +175,101 @@
       "type": "STRING",
       "value": "none"
     },
+    "import_definition": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "import"
+        },
+        {
+          "type": "FIELD",
+          "name": "path",
+          "content": {
+            "type": "SYMBOL",
+            "name": "string"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "as"
+                },
+                {
+                  "type": "FIELD",
+                  "name": "alias",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "identifier"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "{"
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "import_binding"
+                  }
+                },
+                {
+                  "type": "STRING",
+                  "value": "}"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "import_binding": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "="
+        },
+        {
+          "type": "FIELD",
+          "name": "value",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_expression"
+          }
+        }
+      ]
+    },
     "job_reference": {
       "type": "SEQ",
       "members": [
@@ -196,6 +307,81 @@
     "args_reference": {
       "type": "SEQ",
       "members": [
+        {
+          "type": "STRING",
+          "value": "args"
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        }
+      ]
+    },
+    "namespaced_job_reference": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "@"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "STRING",
+          "value": "::"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        }
+      ]
+    },
+    "namespaced_job_output_reference": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "@"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "STRING",
+          "value": "::"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        }
+      ]
+    },
+    "namespaced_args_reference": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "STRING",
+          "value": "::"
+        },
         {
           "type": "STRING",
           "value": "args"
@@ -256,7 +442,15 @@
         },
         {
           "type": "SYMBOL",
+          "name": "namespaced_args_reference"
+        },
+        {
+          "type": "SYMBOL",
           "name": "args_reference"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "namespaced_job_output_reference"
         },
         {
           "type": "SYMBOL",
@@ -420,25 +614,8 @@
       ]
     },
     "_config_item": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "setting"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "env_block"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "env_single"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "arg_definition"
-        }
-      ]
+      "type": "SYMBOL",
+      "name": "setting"
     },
     "arg_definition": {
       "type": "SEQ",
@@ -1012,8 +1189,17 @@
           "value": "after"
         },
         {
-          "type": "SYMBOL",
-          "name": "job_reference"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "namespaced_job_reference"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "job_reference"
+            }
+          ]
         },
         {
           "type": "CHOICE",
@@ -1285,8 +1471,17 @@
           "value": "spawn"
         },
         {
-          "type": "SYMBOL",
-          "name": "job_reference"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "namespaced_job_reference"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "job_reference"
+            }
+          ]
         }
       ]
     }

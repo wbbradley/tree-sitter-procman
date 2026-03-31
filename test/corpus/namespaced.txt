@@ -1,0 +1,91 @@
+===
+After namespaced job reference
+===
+
+job api {
+  wait {
+    after @db::migrate
+  }
+  run "api-server"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (wait_block
+      (wait_condition
+        (after_condition
+          (namespaced_job_reference (identifier) (identifier)))))
+    (run_statement
+      (string (string_content)))))
+
+===
+Spawn namespaced job reference
+===
+
+job web {
+  run "web-server"
+
+  watch disk {
+    exists "/var/run/healthy"
+    on_fail spawn @db::recovery
+  }
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (run_statement
+      (string (string_content)))
+    (watch_block
+      name: (identifier)
+      (wait_condition
+        (exists_condition
+          (string (string_content))))
+      (on_fail_action
+        (spawn_action
+          (namespaced_job_reference (identifier) (identifier)))))))
+
+===
+Namespaced job output reference
+===
+
+job api {
+  env DB_URL = @db::migrate.URL
+  run "api-server"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (env_single
+      name: (identifier)
+      value: (namespaced_job_output_reference (identifier) (identifier) (identifier)))
+    (run_statement
+      (string (string_content)))))
+
+===
+Namespaced args reference
+===
+
+job api {
+  env DB_URL = db::args.url
+  run "api-server"
+}
+
+---
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (env_single
+      name: (identifier)
+      value: (namespaced_args_reference (identifier) (identifier)))
+    (run_statement
+      (string (string_content)))))

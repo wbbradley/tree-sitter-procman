@@ -2,32 +2,41 @@
 Full example from spec
 ===
 
+import "db.pman" as db {
+  url = args.db_url
+}
+
 config {
   logs = "./my-logs"
   log_time = true
+}
 
-  env {
-    RUST_LOG = args.log_level
-  }
+env {
+  RUST_LOG = args.log_level
+}
 
-  arg port {
-    type = string
-    default = "3000"
-    short = "p"
-    description = "Port to listen on"
-  }
+arg port {
+  type = string
+  default = "3000"
+  short = "p"
+  description = "Port to listen on"
+}
 
-  arg log_level {
-    type = string
-    default = "info"
-    short = "r"
-    description = "RUST_LOG configuration"
-  }
+arg log_level {
+  type = string
+  default = "info"
+  short = "r"
+  description = "RUST_LOG configuration"
+}
 
-  arg enable_worker {
-    type = bool
-    default = false
-  }
+arg enable_worker {
+  type = bool
+  default = false
+}
+
+arg db_url {
+  type = string
+  default = "postgres://localhost:5432/mydb"
 }
 
 job migrate {
@@ -43,10 +52,10 @@ service web {
 }
 
 service api {
-  env DB_URL = @migrate.DATABASE_URL
+  env DB_URL = @db::migrate.URL
 
   wait {
-    after @migrate
+    after @db::migrate
     http "http://localhost:3000/health" {
       status = 200
       timeout = 30s
@@ -57,7 +66,7 @@ service api {
   run "api-server start --db $DB_URL"
 }
 
-service db {
+service db-client {
   wait {
     connect "127.0.0.1:5432"
   }
@@ -110,33 +119,43 @@ event recovery {
 ---
 
 (source_file
+  (import_definition
+    path: (string (string_content))
+    alias: (identifier)
+    (import_binding
+      name: (identifier)
+      value: (args_reference (identifier))))
   (config_block
     (setting
       name: (identifier)
       value: (string (string_content)))
     (setting
       name: (identifier)
-      value: (boolean))
-    (env_block
-      (env_pair
-        name: (identifier)
-        value: (args_reference (identifier))))
-    (arg_definition
+      value: (boolean)))
+  (env_block
+    (env_pair
       name: (identifier)
-      (setting name: (identifier) value: (identifier))
-      (setting name: (identifier) value: (string (string_content)))
-      (setting name: (identifier) value: (string (string_content)))
-      (setting name: (identifier) value: (string (string_content))))
-    (arg_definition
-      name: (identifier)
-      (setting name: (identifier) value: (identifier))
-      (setting name: (identifier) value: (string (string_content)))
-      (setting name: (identifier) value: (string (string_content)))
-      (setting name: (identifier) value: (string (string_content))))
-    (arg_definition
-      name: (identifier)
-      (setting name: (identifier) value: (identifier))
-      (setting name: (identifier) value: (boolean))))
+      value: (args_reference (identifier))))
+  (arg_definition
+    name: (identifier)
+    (setting name: (identifier) value: (identifier))
+    (setting name: (identifier) value: (string (string_content)))
+    (setting name: (identifier) value: (string (string_content)))
+    (setting name: (identifier) value: (string (string_content))))
+  (arg_definition
+    name: (identifier)
+    (setting name: (identifier) value: (identifier))
+    (setting name: (identifier) value: (string (string_content)))
+    (setting name: (identifier) value: (string (string_content)))
+    (setting name: (identifier) value: (string (string_content))))
+  (arg_definition
+    name: (identifier)
+    (setting name: (identifier) value: (identifier))
+    (setting name: (identifier) value: (boolean)))
+  (arg_definition
+    name: (identifier)
+    (setting name: (identifier) value: (identifier))
+    (setting name: (identifier) value: (string (string_content))))
   (job_definition
     name: (identifier)
     (run_statement (fenced_string)))
@@ -150,11 +169,11 @@ event recovery {
     name: (identifier)
     (env_single
       name: (identifier)
-      value: (job_output_reference (identifier) (identifier)))
+      value: (namespaced_job_output_reference (identifier) (identifier) (identifier)))
     (wait_block
       (wait_condition
         (after_condition
-          (job_reference (identifier))))
+          (namespaced_job_reference (identifier) (identifier))))
       (wait_condition
         (http_condition
           (string (string_content))

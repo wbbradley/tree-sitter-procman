@@ -32,6 +32,8 @@
   "spawn"
   "on_fail"
   "args"
+  "import"
+  "as"
 ] @keyword
 
 ; ── Literals ──────────────────────────────────────────────────────────
@@ -64,6 +66,27 @@
   "." @punctuation.delimiter
   (identifier) @variable)
 
+(namespaced_job_reference
+  "@" @punctuation.special
+  . (identifier) @module
+  "::" @punctuation.delimiter
+  (identifier) @type)
+
+(namespaced_job_output_reference
+  "@" @punctuation.special
+  . (identifier) @module
+  "::" @punctuation.delimiter
+  (identifier) @type
+  "." @punctuation.delimiter
+  (identifier) @property)
+
+(namespaced_args_reference
+  (identifier) @module
+  "::" @punctuation.delimiter
+  "args" @keyword
+  "." @punctuation.delimiter
+  (identifier) @variable)
+
 ; ── Definitions ───────────────────────────────────────────────────────
 
 (job_definition
@@ -77,6 +100,13 @@
 
 (arg_definition
   name: (identifier) @variable.parameter)
+
+(import_definition
+  path: (string) @string
+  alias: (identifier) @type.definition)
+
+(import_binding
+  name: (identifier) @property)
 
 (watch_block
   name: (identifier) @label)
@@ -134,6 +164,7 @@
 ["(" ")"] @punctuation.bracket
 ["[" "]"] @punctuation.bracket
 "," @punctuation.delimiter
+"::" @punctuation.delimiter
 "@" @punctuation.special
 
 ; ── Comments ──────────────────────────────────────────────────────────

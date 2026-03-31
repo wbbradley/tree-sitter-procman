@@ -1,0 +1,55 @@
+===
+Import with explicit alias
+===
+
+import "db.pman" as db
+
+---
+
+(source_file
+  (import_definition
+    path: (string (string_content))
+    alias: (identifier)))
+
+===
+Import with derived alias
+===
+
+import "cache.pman"
+
+---
+
+(source_file
+  (import_definition
+    path: (string (string_content))))
+
+===
+Import with parameterized bindings
+===
+
+import "db.pman" as db {
+  url = args.db_url
+}
+
+---
+
+(source_file
+  (import_definition
+    path: (string (string_content))
+    alias: (identifier)
+    (import_binding
+      name: (identifier)
+      value: (args_reference (identifier)))))
+
+===
+Import with empty bindings
+===
+
+import "db.pman" as db {}
+
+---
+
+(source_file
+  (import_definition
+    path: (string (string_content))
+    alias: (identifier)))

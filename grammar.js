@@ -14,7 +14,11 @@ module.exports = grammar({
     source_file: $ => repeat($._top_level),
 
     _top_level: $ => choice(
+      $.import_definition,
       $.config_block,
+      $.arg_definition,
+      $.env_single,
+      $.env_block,
       $.job_definition,
       $.service_definition,
       $.event_definition,
@@ -44,6 +48,21 @@ module.exports = grammar({
 
     none: _ => "none",
 
+    // ── Imports ──────────────────────────────────────────────────────
+
+    import_definition: $ => seq(
+      "import",
+      field("path", $.string),
+      optional(seq("as", field("alias", $.identifier))),
+      optional(seq("{", repeat($.import_binding), "}")),
+    ),
+
+    import_binding: $ => seq(
+      field("name", $.identifier),
+      "=",
+      field("value", $._expression),
+    ),
+
     // ── References ───────────────────────────────────────────────────
 
     job_reference: $ => seq("@", $.identifier),
@@ -51,6 +70,13 @@ module.exports = grammar({
     job_output_reference: $ => seq("@", $.identifier, ".", $.identifier),
 
     args_reference: $ => seq("args", ".", $.identifier),
+
+    namespaced_job_reference: $ => seq("@", $.identifier, "::", $.identifier),
+
+    namespaced_job_output_reference: $ => seq(
+      "@", $.identifier, "::", $.identifier, ".", $.identifier),
+
+    namespaced_args_reference: $ => seq($.identifier, "::", "args", ".", $.identifier),
 
     // ── Expressions ──────────────────────────────────────────────────
 
@@ -67,7 +93,9 @@ module.exports = grammar({
       $.duration,
       $.boolean,
       $.none,
+      $.namespaced_args_reference,
       $.args_reference,
+      $.namespaced_job_output_reference,
       $.job_output_reference,
       $.identifier,
     ),
@@ -91,12 +119,7 @@ module.exports = grammar({
       "}",
     ),
 
-    _config_item: $ => choice(
-      $.setting,
-      $.env_block,
-      $.env_single,
-      $.arg_definition,
-    ),
+    _config_item: $ => $.setting,
 
     arg_definition: $ => seq(
       "arg",
@@ -223,7 +246,10 @@ module.exports = grammar({
       $.contains_condition,
     ),
 
-    after_condition: $ => seq("after", $.job_reference, optional($.condition_options)),
+    after_condition: $ => seq(
+      "after",
+      choice($.namespaced_job_reference, $.job_reference),
+      optional($.condition_options)),
     http_condition: $ => seq("http", $.string, optional($.condition_options)),
     connect_condition: $ => seq("connect", $.string, optional($.condition_options)),
     exists_condition: $ => seq("exists", $.string, optional($.condition_options)),
@@ -273,6 +299,8 @@ module.exports = grammar({
       $.identifier,
     ),
 
-    spawn_action: $ => seq("spawn", $.job_reference),
+    spawn_action: $ => seq(
+      "spawn",
+      choice($.namespaced_job_reference, $.job_reference)),
   },
 });

@@ -1,4 +1,5 @@
 ; Scopes
+(import_definition) @local.scope
 (job_definition) @local.scope
 (service_definition) @local.scope
 (event_definition) @local.scope

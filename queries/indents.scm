@@ -1,5 +1,6 @@
 [
   (config_block)
+  (import_definition)
   (job_definition)
   (service_definition)
   (event_definition)
