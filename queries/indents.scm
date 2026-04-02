@@ -2,6 +2,7 @@
   (config_block)
   (import_definition)
   (job_definition)
+  (task_definition)
   (service_definition)
   (event_definition)
   (arg_definition)

@@ -3,6 +3,7 @@
 [
   "config"
   "job"
+  "task"
   "service"
   "event"
 ] @keyword.type
@@ -90,6 +91,9 @@
 ; ── Definitions ───────────────────────────────────────────────────────
 
 (job_definition
+  name: (identifier) @type.definition)
+
+(task_definition
   name: (identifier) @type.definition)
 
 (service_definition

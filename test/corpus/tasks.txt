@@ -1,0 +1,126 @@
+===
+Simple task
+===
+
+task migrate {
+  run "db-migrate up"
+}
+
+---
+
+(source_file
+  (task_definition
+    name: (identifier)
+    (run_statement
+      (string (string_content)))))
+
+===
+Conditional task
+===
+
+task seed if args.enable_seed {
+  run "db-seed"
+}
+
+---
+
+(source_file
+  (task_definition
+    name: (identifier)
+    condition: (args_reference (identifier))
+    (run_statement
+      (string (string_content)))))
+
+===
+Task with env single
+===
+
+task deploy {
+  env TARGET = args.target
+  run "deploy.sh"
+}
+
+---
+
+(source_file
+  (task_definition
+    name: (identifier)
+    (env_single
+      name: (identifier)
+      value: (args_reference (identifier)))
+    (run_statement
+      (string (string_content)))))
+
+===
+Task with env block
+===
+
+task deploy {
+  env {
+    TARGET = args.target
+    VERSION = "1.0"
+  }
+  run "deploy.sh"
+}
+
+---
+
+(source_file
+  (task_definition
+    name: (identifier)
+    (env_block
+      (env_pair
+        name: (identifier)
+        value: (args_reference (identifier)))
+      (env_pair
+        name: (identifier)
+        value: (string (string_content))))
+    (run_statement
+      (string (string_content)))))
+
+===
+Task with wait block
+===
+
+task report {
+  wait {
+    after @migrate
+  }
+  run "generate-report"
+}
+
+---
+
+(source_file
+  (task_definition
+    name: (identifier)
+    (wait_block
+      (wait_condition
+        (after_condition
+          (job_reference (identifier)))))
+    (run_statement
+      (string (string_content)))))
+
+===
+Task with for loop
+===
+
+task batch {
+  for item in ["a", "b", "c"] {
+    run "process-item"
+  }
+}
+
+---
+
+(source_file
+  (task_definition
+    name: (identifier)
+    (for_statement
+      variable: (identifier)
+      iterable: (array_literal
+        (string (string_content))
+        (string (string_content))
+        (string (string_content)))
+      (run_statement
+        (string (string_content))))))

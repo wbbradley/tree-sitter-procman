@@ -20,6 +20,7 @@ module.exports = grammar({
       $.env_single,
       $.env_block,
       $.job_definition,
+      $.task_definition,
       $.service_definition,
       $.event_definition,
     ),
@@ -133,6 +134,15 @@ module.exports = grammar({
 
     job_definition: $ => seq(
       "job",
+      field("name", $.identifier),
+      optional(seq("if", field("condition", $._expression))),
+      "{",
+      repeat($._job_item),
+      "}",
+    ),
+
+    task_definition: $ => seq(
+      "task",
       field("name", $.identifier),
       optional(seq("if", field("condition", $._expression))),
       "{",

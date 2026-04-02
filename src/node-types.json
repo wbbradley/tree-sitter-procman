@@ -1329,6 +1329,10 @@
         {
           "type": "service_definition",
           "named": true
+        },
+        {
+          "type": "task_definition",
+          "named": true
         }
       ]
     }
@@ -1366,6 +1370,110 @@
         },
         {
           "type": "string_content",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "task_definition",
+    "named": true,
+    "fields": {
+      "condition": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "args_reference",
+            "named": true
+          },
+          {
+            "type": "binary_expression",
+            "named": true
+          },
+          {
+            "type": "boolean",
+            "named": true
+          },
+          {
+            "type": "duration",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "job_output_reference",
+            "named": true
+          },
+          {
+            "type": "namespaced_args_reference",
+            "named": true
+          },
+          {
+            "type": "namespaced_job_output_reference",
+            "named": true
+          },
+          {
+            "type": "none",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "parenthesized_expression",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          },
+          {
+            "type": "unary_expression",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "env_block",
+          "named": true
+        },
+        {
+          "type": "env_single",
+          "named": true
+        },
+        {
+          "type": "for_statement",
+          "named": true
+        },
+        {
+          "type": "run_statement",
+          "named": true
+        },
+        {
+          "type": "wait_block",
+          "named": true
+        },
+        {
+          "type": "watch_block",
           "named": true
         }
       ]
@@ -1721,6 +1829,10 @@
   {
     "type": "string_content",
     "named": true
+  },
+  {
+    "type": "task",
+    "named": false
   },
   {
     "type": "true",
