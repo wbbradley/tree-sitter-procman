@@ -79,6 +79,13 @@ module.exports = grammar({
 
     namespaced_args_reference: $ => seq($.identifier, "::", "args", ".", $.identifier),
 
+    module_dir_reference: $ => seq("module", ".", field("field", $.identifier)),
+
+    procman_dir_reference: $ => seq("procman", ".", field("field", $.identifier)),
+
+    namespaced_module_dir_reference: $ => seq(
+      $.identifier, "::", "module", ".", field("field", $.identifier)),
+
     // ── Expressions ──────────────────────────────────────────────────
 
     _expression: $ => choice(
@@ -94,10 +101,13 @@ module.exports = grammar({
       $.duration,
       $.boolean,
       $.none,
+      $.namespaced_module_dir_reference,
       $.namespaced_args_reference,
       $.args_reference,
       $.namespaced_job_output_reference,
       $.job_output_reference,
+      $.module_dir_reference,
+      $.procman_dir_reference,
       $.identifier,
     ),
 
@@ -105,9 +115,10 @@ module.exports = grammar({
       prec.left(1, seq($._expression, "||", $._expression)),
       prec.left(2, seq($._expression, "&&", $._expression)),
       prec.left(3, seq($._expression, choice("==", "!=", "<", ">", "<=", ">="), $._expression)),
+      prec.left(4, seq($._expression, "+", $._expression)),
     ),
 
-    unary_expression: $ => prec(4, seq("!", $._expression)),
+    unary_expression: $ => prec(5, seq("!", $._expression)),
 
     parenthesized_expression: $ => seq("(", $._expression, ")"),
 

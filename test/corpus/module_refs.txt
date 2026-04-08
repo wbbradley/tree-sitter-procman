@@ -1,0 +1,103 @@
+================================================================================
+module.dir reference
+================================================================================
+
+job build {
+  env DIR = module.dir
+  run "echo hello"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (env_single
+      name: (identifier)
+      value: (module_dir_reference
+        field: (identifier)))
+    (run_statement (string (string_content)))))
+
+================================================================================
+procman.dir reference
+================================================================================
+
+job build {
+  env DIR = procman.dir
+  run "echo hello"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (env_single
+      name: (identifier)
+      value: (procman_dir_reference
+        field: (identifier)))
+    (run_statement (string (string_content)))))
+
+================================================================================
+Namespaced module.dir reference
+================================================================================
+
+job build {
+  env DIR = infra::module.dir
+  run "echo hello"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (env_single
+      name: (identifier)
+      value: (namespaced_module_dir_reference
+        (identifier)
+        field: (identifier)))
+    (run_statement (string (string_content)))))
+
+================================================================================
+String concatenation with +
+================================================================================
+
+job build {
+  env PATH = module.dir + "/bin"
+  run "echo hello"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (job_definition
+    name: (identifier)
+    (env_single
+      name: (identifier)
+      value: (binary_expression
+        (module_dir_reference
+          field: (identifier))
+        (string (string_content))))
+    (run_statement (string (string_content)))))
+
+================================================================================
+Concatenation precedence: + binds tighter than comparison
+================================================================================
+
+job build if module.dir + "/x" == args.target {
+  run "echo hello"
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (job_definition
+    name: (identifier)
+    condition: (binary_expression
+      (binary_expression
+        (module_dir_reference
+          field: (identifier))
+        (string (string_content)))
+      (args_reference (identifier)))
+    (run_statement (string (string_content)))))

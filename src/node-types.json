@@ -96,11 +96,19 @@
           "named": true
         },
         {
+          "type": "module_dir_reference",
+          "named": true
+        },
+        {
           "type": "namespaced_args_reference",
           "named": true
         },
         {
           "type": "namespaced_job_output_reference",
+          "named": true
+        },
+        {
+          "type": "namespaced_module_dir_reference",
           "named": true
         },
         {
@@ -113,6 +121,10 @@
         },
         {
           "type": "parenthesized_expression",
+          "named": true
+        },
+        {
+          "type": "procman_dir_reference",
           "named": true
         },
         {
@@ -159,11 +171,19 @@
           "named": true
         },
         {
+          "type": "module_dir_reference",
+          "named": true
+        },
+        {
           "type": "namespaced_args_reference",
           "named": true
         },
         {
           "type": "namespaced_job_output_reference",
+          "named": true
+        },
+        {
+          "type": "namespaced_module_dir_reference",
           "named": true
         },
         {
@@ -176,6 +196,10 @@
         },
         {
           "type": "parenthesized_expression",
+          "named": true
+        },
+        {
+          "type": "procman_dir_reference",
           "named": true
         },
         {
@@ -320,11 +344,19 @@
             "named": true
           },
           {
+            "type": "module_dir_reference",
+            "named": true
+          },
+          {
             "type": "namespaced_args_reference",
             "named": true
           },
           {
             "type": "namespaced_job_output_reference",
+            "named": true
+          },
+          {
+            "type": "namespaced_module_dir_reference",
             "named": true
           },
           {
@@ -337,6 +369,10 @@
           },
           {
             "type": "parenthesized_expression",
+            "named": true
+          },
+          {
+            "type": "procman_dir_reference",
             "named": true
           },
           {
@@ -394,11 +430,19 @@
             "named": true
           },
           {
+            "type": "module_dir_reference",
+            "named": true
+          },
+          {
             "type": "namespaced_args_reference",
             "named": true
           },
           {
             "type": "namespaced_job_output_reference",
+            "named": true
+          },
+          {
+            "type": "namespaced_module_dir_reference",
             "named": true
           },
           {
@@ -411,6 +455,10 @@
           },
           {
             "type": "parenthesized_expression",
+            "named": true
+          },
+          {
+            "type": "procman_dir_reference",
             "named": true
           },
           {
@@ -619,11 +667,19 @@
             "named": true
           },
           {
+            "type": "module_dir_reference",
+            "named": true
+          },
+          {
             "type": "namespaced_args_reference",
             "named": true
           },
           {
             "type": "namespaced_job_output_reference",
+            "named": true
+          },
+          {
+            "type": "namespaced_module_dir_reference",
             "named": true
           },
           {
@@ -636,6 +692,10 @@
           },
           {
             "type": "parenthesized_expression",
+            "named": true
+          },
+          {
+            "type": "procman_dir_reference",
             "named": true
           },
           {
@@ -719,11 +779,19 @@
             "named": true
           },
           {
+            "type": "module_dir_reference",
+            "named": true
+          },
+          {
             "type": "namespaced_args_reference",
             "named": true
           },
           {
             "type": "namespaced_job_output_reference",
+            "named": true
+          },
+          {
+            "type": "namespaced_module_dir_reference",
             "named": true
           },
           {
@@ -736,6 +804,10 @@
           },
           {
             "type": "parenthesized_expression",
+            "named": true
+          },
+          {
+            "type": "procman_dir_reference",
             "named": true
           },
           {
@@ -821,6 +893,22 @@
     }
   },
   {
+    "type": "module_dir_reference",
+    "named": true,
+    "fields": {
+      "field": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "namespaced_args_reference",
     "named": true,
     "fields": {},
@@ -856,6 +944,32 @@
     "fields": {},
     "children": {
       "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "namespaced_module_dir_reference",
+    "named": true,
+    "fields": {
+      "field": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
       "required": true,
       "types": [
         {
@@ -917,11 +1031,19 @@
           "named": true
         },
         {
+          "type": "module_dir_reference",
+          "named": true
+        },
+        {
           "type": "namespaced_args_reference",
           "named": true
         },
         {
           "type": "namespaced_job_output_reference",
+          "named": true
+        },
+        {
+          "type": "namespaced_module_dir_reference",
           "named": true
         },
         {
@@ -937,6 +1059,10 @@
           "named": true
         },
         {
+          "type": "procman_dir_reference",
+          "named": true
+        },
+        {
           "type": "string",
           "named": true
         },
@@ -945,6 +1071,22 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "procman_dir_reference",
+    "named": true,
+    "fields": {
+      "field": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -980,11 +1122,19 @@
           "named": true
         },
         {
+          "type": "module_dir_reference",
+          "named": true
+        },
+        {
           "type": "namespaced_args_reference",
           "named": true
         },
         {
           "type": "namespaced_job_output_reference",
+          "named": true
+        },
+        {
+          "type": "namespaced_module_dir_reference",
           "named": true
         },
         {
@@ -997,6 +1147,10 @@
         },
         {
           "type": "parenthesized_expression",
+          "named": true
+        },
+        {
+          "type": "procman_dir_reference",
           "named": true
         },
         {
@@ -1043,11 +1197,19 @@
           "named": true
         },
         {
+          "type": "module_dir_reference",
+          "named": true
+        },
+        {
           "type": "namespaced_args_reference",
           "named": true
         },
         {
           "type": "namespaced_job_output_reference",
+          "named": true
+        },
+        {
+          "type": "namespaced_module_dir_reference",
           "named": true
         },
         {
@@ -1060,6 +1222,10 @@
         },
         {
           "type": "parenthesized_expression",
+          "named": true
+        },
+        {
+          "type": "procman_dir_reference",
           "named": true
         },
         {
@@ -1144,11 +1310,19 @@
             "named": true
           },
           {
+            "type": "module_dir_reference",
+            "named": true
+          },
+          {
             "type": "namespaced_args_reference",
             "named": true
           },
           {
             "type": "namespaced_job_output_reference",
+            "named": true
+          },
+          {
+            "type": "namespaced_module_dir_reference",
             "named": true
           },
           {
@@ -1161,6 +1335,10 @@
           },
           {
             "type": "parenthesized_expression",
+            "named": true
+          },
+          {
+            "type": "procman_dir_reference",
             "named": true
           },
           {
@@ -1258,11 +1436,19 @@
             "named": true
           },
           {
+            "type": "module_dir_reference",
+            "named": true
+          },
+          {
             "type": "namespaced_args_reference",
             "named": true
           },
           {
             "type": "namespaced_job_output_reference",
+            "named": true
+          },
+          {
+            "type": "namespaced_module_dir_reference",
             "named": true
           },
           {
@@ -1275,6 +1461,10 @@
           },
           {
             "type": "parenthesized_expression",
+            "named": true
+          },
+          {
+            "type": "procman_dir_reference",
             "named": true
           },
           {
@@ -1408,11 +1598,19 @@
             "named": true
           },
           {
+            "type": "module_dir_reference",
+            "named": true
+          },
+          {
             "type": "namespaced_args_reference",
             "named": true
           },
           {
             "type": "namespaced_job_output_reference",
+            "named": true
+          },
+          {
+            "type": "namespaced_module_dir_reference",
             "named": true
           },
           {
@@ -1425,6 +1623,10 @@
           },
           {
             "type": "parenthesized_expression",
+            "named": true
+          },
+          {
+            "type": "procman_dir_reference",
             "named": true
           },
           {
@@ -1512,11 +1714,19 @@
           "named": true
         },
         {
+          "type": "module_dir_reference",
+          "named": true
+        },
+        {
           "type": "namespaced_args_reference",
           "named": true
         },
         {
           "type": "namespaced_job_output_reference",
+          "named": true
+        },
+        {
+          "type": "namespaced_module_dir_reference",
           "named": true
         },
         {
@@ -1529,6 +1739,10 @@
         },
         {
           "type": "parenthesized_expression",
+          "named": true
+        },
+        {
+          "type": "procman_dir_reference",
           "named": true
         },
         {
@@ -1648,6 +1862,10 @@
   },
   {
     "type": ")",
+    "named": false
+  },
+  {
+    "type": "+",
     "named": false
   },
   {
@@ -1799,6 +2017,10 @@
     "named": false
   },
   {
+    "type": "module",
+    "named": false
+  },
+  {
     "type": "none",
     "named": true
   },
@@ -1808,6 +2030,10 @@
   },
   {
     "type": "on_fail",
+    "named": false
+  },
+  {
+    "type": "procman",
     "named": false
   },
   {

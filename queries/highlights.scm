@@ -35,6 +35,8 @@
   "args"
   "import"
   "as"
+  "module"
+  "procman"
 ] @keyword
 
 ; ── Literals ──────────────────────────────────────────────────────────
@@ -87,6 +89,23 @@
   "args" @keyword
   "." @punctuation.delimiter
   (identifier) @variable)
+
+(module_dir_reference
+  "module" @keyword
+  "." @punctuation.delimiter
+  field: (identifier) @property)
+
+(procman_dir_reference
+  "procman" @keyword
+  "." @punctuation.delimiter
+  field: (identifier) @property)
+
+(namespaced_module_dir_reference
+  (identifier) @module
+  "::" @punctuation.delimiter
+  "module" @keyword
+  "." @punctuation.delimiter
+  field: (identifier) @property)
 
 ; ── Definitions ───────────────────────────────────────────────────────
 
@@ -154,6 +173,7 @@
   "&&"
   "||"
   "!"
+  "+"
 ] @operator
 
 [

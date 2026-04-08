@@ -5,7 +5,7 @@ A [tree-sitter](https://tree-sitter.github.io/) grammar for the
 
 ## Procman version compatibility
 
-This grammar targets **procman v0.22.0**.
+This grammar targets **procman v0.23.1**.
 
 When bumping compatibility, check the procman
 [CHANGELOG](https://github.com/wbbradley/procman/blob/main/CHANGELOG.md) from
